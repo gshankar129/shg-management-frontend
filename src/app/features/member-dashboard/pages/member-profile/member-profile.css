@@ -1,0 +1,238 @@
+.dashboard-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #2c3e50;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Header Section */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 20px;
+}
+
+.avatar-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.user-info h1 {
+  margin: 0 0 4px 0;
+  font-size: 1.3rem;
+  color: #1a1a1a;
+}
+
+.shg-tag {
+  margin: 0 0 6px 0;
+  font-size: 0.85rem;
+  color: #666666;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Summary Cards Grid */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card-icon {
+  font-size: 2rem;
+  background: #f0f4f8;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.card-label {
+  font-size: 0.8rem;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.amount {
+  margin: 2px 0;
+  font-size: 1.5rem;
+  color: #2e7d32;
+}
+
+.amount.warning {
+  color: #c62828;
+}
+
+.sub-text {
+  font-size: 0.78rem;
+  color: #888888;
+}
+
+/* Passbook Table & Items */
+.passbook-section {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.btn-secondary {
+  background: #f1f3f5;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #333333;
+  cursor: pointer;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filter-pills button {
+  border: 1px solid #e0e0e0;
+  background: #ffffff;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.filter-pills button.active {
+  background: #2e7d32;
+  color: #ffffff;
+  border-color: #2e7d32;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.tx-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 12px;
+}
+
+.tx-icon.savings {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.tx-icon.loan {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.tx-details {
+  flex-grow: 1;
+}
+
+.tx-title {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.tx-date {
+  font-size: 0.78rem;
+  color: #888888;
+}
+
+.tx-amount-col {
+  text-align: right;
+}
+
+.tx-amount {
+  display: block;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.tx-amount.credit {
+  color: #2e7d32;
+}
+
+.tx-amount.debit {
+  color: #c62828;
+}
+
+.tx-balance {
+  font-size: 0.75rem;
+  color: #888888;
+}

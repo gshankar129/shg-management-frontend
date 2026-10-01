@@ -1,0 +1,270 @@
+.loan-container {
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #1e293b;
+}
+
+.loan-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 28px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.loan-header h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.4rem;
+  color: #0f172a;
+}
+
+.loan-header p {
+  margin: 0 0 24px 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* Two Column Grid */
+.calculator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 768px) {
+  .calculator-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Form Inputs */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.form-group label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.value-badge {
+  background: #f1f5f9;
+  color: #1e293b;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  box-sizing: border-box;
+}
+
+/* Slider */
+.slider {
+  width: 100%;
+  accent-color: #16a34a;
+  cursor: pointer;
+  margin: 8px 0;
+}
+
+.range-limits {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Tenure Pills */
+.tenure-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.tenure-pills button {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tenure-pills button.active {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.fixed-rate {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #16a34a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.btn-submit:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+/* Summary Panel */
+.summary-panel {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-panel h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+}
+
+.emi-display {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.emi-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.emi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #16a34a;
+  margin: 4px 0;
+}
+
+.due-text {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.88rem;
+  margin-bottom: 20px;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  color: #475569;
+}
+
+.breakdown-item.total {
+  border-top: 1px solid #cbd5e1;
+  padding-top: 10px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.interest-text {
+  color: #d97706;
+}
+
+.total-text {
+  color: #0f172a;
+}
+
+/* Visual Proportion Bar */
+.proportion-container {
+  margin-bottom: 20px;
+}
+
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.principal-dot {
+  color: #16a34a;
+}
+
+.interest-dot {
+  color: #d97706;
+}
+
+.proportion-bar {
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  background: #e2e8f0;
+}
+
+.bar-principal {
+  background-color: #16a34a;
+  height: 100%;
+}
+
+.bar-interest {
+  background-color: #d97706;
+  height: 100%;
+}
+
+.policy-note {
+  margin-top: auto;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.policy-note p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #1e40af;
+  line-height: 1.4;
+}

@@ -1,0 +1,126 @@
+<p>loan-request-form works!</p>
+<p>loan-dashboard works!</p>
+<div class="loan-container">
+  <div class="loan-card">
+    <header class="loan-header">
+      <h2>Apply for SHG Micro-Loan</h2>
+      <p>Calculate your monthly installments (EMI) and submit your request for group approval.</p>
+    </header>
+
+    <div class="calculator-grid">
+      <!-- INPUT FORM -->
+      <form class="loan-form" (ngSubmit)="submitLoanApplication()">
+        
+        <!-- Loan Purpose -->
+        <div class="form-group">
+          <label for="purpose">Loan Purpose</label>
+          <select id="purpose" [(ngModel)]="loanPurpose" name="loanPurpose" class="form-control" required>
+            <option value="">-- Select Purpose --</option>
+            <option value="AGRI">Agricultural Inputs & Seeds</option>
+            <option value="ENTERPRISE">Small Enterprise / Micro-Business</option>
+            <option value="EDUCATION">Children's School / College Education</option>
+            <option value="MEDICAL">Medical Emergency</option>
+            <option value="OTHER">Other Household Purpose</option>
+          </select>
+        </div>
+
+        <!-- Loan Amount Slider & Input -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="amount">Required Loan Amount</label>
+            <span class="value-badge">₹{{ loanAmount | number }}</span>
+          </div>
+          <input 
+            type="range" 
+            min="1000" 
+            max="50000" 
+            step="1000" 
+            [(ngModel)]="loanAmount" 
+            name="amountSlider"
+            (input)="calculateEmi()"
+            class="slider"
+          />
+          <div class="range-limits">
+            <span>Min: ₹1,000</span>
+            <span>Max Group Limit: ₹50,000</span>
+          </div>
+        </div>
+
+        <!-- Tenure Slider & Selector -->
+        <div class="form-group">
+          <div class="label-row">
+            <label for="tenure">Repayment Tenure</label>
+            <span class="value-badge">{{ tenureMonths }} Months</span>
+          </div>
+          <div class="tenure-pills">
+            <button 
+              type="button"
+              *ngFor="let month of tenureOptions" 
+              [class.active]="tenureMonths === month"
+              (click)="selectTenure(month)">
+              {{ month }}M
+            </button>
+          </div>
+        </div>
+
+        <!-- Group Interest Rate (Fixed) -->
+        <div class="form-group">
+          <div class="label-row">
+            <label>Interest Rate (SHG Group Policy)</label>
+            <span class="fixed-rate">{{ annualInterestRate }}% p.a. (Reducing)</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <button 
+          type="submit" 
+          class="btn-submit" 
+          [disabled]="!loanPurpose || loanAmount <= 0">
+          Submit Loan Request (₹{{ loanAmount | number }})
+        </button>
+      </form>
+
+      <!-- EMI & REPAYMENT SUMMARY BREAKDOWN -->
+      <div class="summary-panel">
+        <h3>Repayment Summary</h3>
+
+        <div class="emi-display">
+          <span class="emi-label">Estimated Monthly EMI</span>
+          <div class="emi-value">₹{{ emiAmount | number:'1.0-0' }}</div>
+          <small class="due-text">Due on the 10th of every month</small>
+        </div>
+
+        <div class="breakdown-list">
+          <div class="breakdown-item">
+            <span>Principal Amount:</span>
+            <strong>₹{{ loanAmount | number }}</strong>
+          </div>
+          <div class="breakdown-item">
+            <span>Total Interest Payable:</span>
+            <strong class="interest-text">₹{{ totalInterest | number:'1.0-0' }}</strong>
+          </div>
+          <div class="breakdown-item total">
+            <span>Total Repayment Amount:</span>
+            <strong class="total-text">₹{{ totalRepayment | number:'1.0-0' }}</strong>
+          </div>
+        </div>
+
+        <!-- Visual Proportion Bar -->
+        <div class="proportion-container">
+          <div class="bar-label">
+            <span class="principal-dot">● Principal</span>
+            <span class="interest-dot">● Interest</span>
+          </div>
+          <div class="proportion-bar">
+            <div class="bar-principal" [style.width.%]="principalPercentage"></div>
+            <div class="bar-interest" [style.width.%]="interestPercentage"></div>
+          </div>
+        </div>
+
+        <div class="policy-note">
+          <p>ℹ️ <strong>Note:</strong> Loan disbursal is subject to vote approval during the upcoming SHG weekly group meeting.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

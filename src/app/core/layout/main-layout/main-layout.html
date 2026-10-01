@@ -1,0 +1,12 @@
+<!-- <p>main-layout works!</p> -->
+<div class="layout-wrapper">
+  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+  
+  <div class="layout-body">
+    <app-sidebar [isCollapsed]="sidebarCollapsed"></app-sidebar>
+    
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

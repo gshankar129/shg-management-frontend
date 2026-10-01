@@ -1,0 +1,170 @@
+<div class="loan-dashboard">
+  <!-- Top Action & Overview Header -->
+  <header class="dashboard-header">
+    <div>
+      <h1>Loan Management</h1>
+      <p class="subtitle">Track active SHG loans, upcoming EMIs, and repayment schedules.</p>
+    </div>
+    <button class="btn-primary" (click)="openApplyLoanModal()">
+      ➕ Apply for New Loan
+    </button>
+  </header>
+
+  <!-- Key Metrics Summary Grid -->
+  <section class="metrics-grid">
+    <div class="metric-card">
+      <span class="metric-label">Active Loans</span>
+      <h2 class="metric-value">{{ activeLoans.length }}</h2>
+      <span class="metric-sub text-muted">Max Limit: 2 concurrent loans</span>
+    </div>
+
+    <div class="metric-card">
+      <span class="metric-label">Total Outstanding Balance</span>
+      <h2 class="metric-value warning">₹{{ totalOutstandingBalance | number }}</h2>
+      <span class="metric-sub text-muted">Principal left across active loans</span>
+    </div>
+
+    <div class="metric-card highlight-card">
+      <span class="metric-label">Next EMI Due Date</span>
+      <h2 class="metric-value">10th Aug 2026</h2>
+      <span class="metric-sub text-success">Amount Due: <strong>₹{{ nextEmiAmount | number:'1.0-0' }}</strong></span>
+    </div>
+  </section>
+
+  <!-- ACTIVE LOANS SECTION -->
+  <section class="section-container">
+    <div class="section-title-bar">
+      <h2>Active Loan Portfolio</h2>
+    </div>
+
+    <div *ngIf="activeLoans.length === 0" class="empty-state">
+      <span class="empty-icon">🎉</span>
+      <h3>No Active Loans</h3>
+      <p>You currently have no outstanding loan liabilities in Jay Ambe SHG.</p>
+    </div>
+
+    <div *ngFor="let loan of activeLoans" class="loan-card">
+      <div class="card-header">
+        <div class="loan-info">
+          <span class="loan-id">{{ loan.loanId }}</span>
+          <h3>{{ loan.purposeTitle }}</h3>
+          <span class="date-text">Disbursed on: {{ loan.disbursedDate }}</span>
+        </div>
+        <span class="badge badge-active">Active</span>
+      </div>
+
+      <!-- Repayment Progress Bar -->
+      <div class="progress-section">
+        <div class="progress-labels">
+          <span>Repaid: <strong>₹{{ loan.totalRepaid | number }}</strong> ({{ loan.paidPercentage | number:'1.0-0' }}%)</span>
+          <span>Target: <strong>₹{{ loan.totalRepayableAmount | number }}</strong></span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" [style.width.%]="loan.paidPercentage"></div>
+        </div>
+      </div>
+
+      <div class="card-details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Principal Sanctioned</span>
+          <span class="detail-val">₹{{ loan.principalAmount | number }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Monthly EMI</span>
+          <span class="detail-val highlight">₹{{ loan.monthlyEmi | number:'1.0-0' }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Remaining EMIs</span>
+          <span class="detail-val">{{ loan.emisRemaining }} of {{ loan.totalTenureMonths }} Months</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Outstanding Principal</span>
+          <span class="detail-val warning">₹{{ loan.outstandingBalance | number }}</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn-secondary" (click)="toggleScheduleModal(loan)">
+          🗓️ View EMI Schedule
+        </button>
+        <button class="btn-pay" (click)="payEmi(loan)">
+          💳 Pay Current EMI (₹{{ loan.monthlyEmi | number:'1.0-0' }})
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPAYMENT HISTORY TABLE -->
+  <section class="section-container">
+    <div class="section-title-bar">
+      <h2>Recent Repayment Receipts</h2>
+    </div>
+
+    <div class="table-card">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Loan ID</th>
+            <th>Receipt No.</th>
+            <th>Type</th>
+            <th>Principal Paid</th>
+            <th>Interest Paid</th>
+            <th>Total Paid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let receipt of repaymentHistory">
+            <td>{{ receipt.date }}</td>
+            <td><strong>{{ receipt.loanId }}</strong></td>
+            <td><code>{{ receipt.receiptNo }}</code></td>
+            <td><span class="tag-badge">{{ receipt.paymentType }}</span></td>
+            <td>₹{{ receipt.principalPaid | number }}</td>
+            <td>₹{{ receipt.interestPaid | number }}</td>
+            <td class="text-success font-bold">₹{{ receipt.totalPaid | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- EMI SCHEDULE MODAL -->
+  <div class="modal-backdrop" *ngIf="selectedLoanForSchedule">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>EMI Repayment Schedule — {{ selectedLoanForSchedule.loanId }}</h3>
+        <button class="close-btn" (click)="selectedLoanForSchedule = null">✕</button>
+      </div>
+      <div class="modal-body scrollable-body">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Due Date</th>
+              <th>EMI Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let installment of scheduleList; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ installment.dueDate }}</td>
+              <td>₹{{ installment.emi | number:'1.0-0' }}</td>
+              <td>
+                <span 
+                  class="badge" 
+                  [class.badge-active]="installment.status === 'PAID'"
+                  [class.badge-pending]="installment.status === 'DUE'">
+                  {{ installment.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="selectedLoanForSchedule = null">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

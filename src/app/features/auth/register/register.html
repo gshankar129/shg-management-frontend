@@ -1,0 +1,101 @@
+<p>signup works!</p>
+<div class="signup-container">
+  <div class="signup-header">
+    <h2>Create Your Account</h2>
+    <p>Register basic details first. You can create or join an SHG group in the next step.</p>
+    <!-- <h2>Join your Self-Help Group</h2>
+    <p>Enter your details and Group Code to submit a join request to your SHG Leader.</p> -->
+  </div>
+
+  <!-- Success & Error Alert Banners -->
+  <div *ngIf="message()" class="alert alert-success">
+    {{ message() }}
+  </div>
+  
+  <div *ngIf="error()" class="alert alert-danger">
+    {{ error() }}
+  </div>
+
+
+  <form (ngSubmit)="onRegister()">
+    <!-- Full Name -->
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input 
+        id="name"
+        type="text" 
+        class="form-control"
+        [(ngModel)]="name" 
+        name="name" 
+        placeholder="e.g. Sunita Sharma"
+        required 
+      />
+    </div>
+
+    <!-- Email Address -->
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input 
+        id="email"
+        type="email" 
+        class="form-control"
+        [(ngModel)]="email" 
+        name="email" 
+        placeholder="name@example.com"
+        required 
+      />
+    </div>
+
+    <!-- Mobile Number -->
+    <div class="form-group">
+      <label for="phone">Mobile Number</label>
+      <input 
+        id="phone"
+        type="tel" 
+        class="form-control"
+        [(ngModel)]="phone" 
+        name="phone" 
+        placeholder="10-digit mobile number"
+        required 
+      />
+    </div>
+
+    <!-- Group Code 
+    <div class="form-group">
+      <label for="groupCode">SHG Group Code</label>
+      <input 
+        id="groupCode"
+        type="text" 
+        class="form-control code-input"
+        [(ngModel)]="groupCode" 
+        name="groupCode" 
+        placeholder="e.g. SHG-DELHI-042"
+        required 
+      />
+      <small class="help-text">Ask your group leader or animator for your 10-character code.</small>
+    </div>-->
+
+    <!-- Password / PIN -->
+    <div class="form-group">
+      <label for="password">Create Security PIN / Password</label>
+      <input 
+        id="password"
+        type="password" 
+        class="form-control"
+        [(ngModel)]="password" 
+        name="password" 
+        placeholder="At least 4 characters"
+        required 
+      />
+    </div>
+
+    <button type="submit" class="btn-primary">
+      {{ isLoading() ? 'Registering...' : 'Create Account' }}
+     <!-- Submit Request to Join -->
+    </button>
+  </form>
+
+  <div class="signup-footer">
+    <p>Already a registered user? <a routerLink="/auth/login">Log In here</a></p>
+  </div>
+</div>

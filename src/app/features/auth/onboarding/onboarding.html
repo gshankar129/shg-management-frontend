@@ -1,0 +1,83 @@
+<p>onboarding works!</p>
+<div class="onboarding-container">
+  <div class="onboarding-header">
+    <h2>Step 2: Setup Your SHG Profile</h2>
+    <p>Choose whether you want to start a new Self-Help Group or join an existing one.</p>
+  </div>
+
+  <!-- Selection Tabs -->
+  <div class="tab-group">
+    <button 
+      type="button" 
+      class="tab-btn" 
+      [class.active]="selectedMode() === 'CREATE'" 
+      (click)="setMode('CREATE')">
+      Create New SHG
+    </button>
+    <button 
+      type="button" 
+      class="tab-btn" 
+      [class.active]="selectedMode() === 'JOIN'" 
+      (click)="setMode('JOIN')">
+      Join Existing SHG
+    </button>
+  </div>
+
+  <!-- Alert Messages -->
+  <div *ngIf="message()" class="alert alert-success">{{ message() }}</div>
+  <div *ngIf="error()" class="alert alert-danger">{{ error() }}</div>
+
+  <!-- Form 1: Create Group -->
+  <form *ngIf="selectedMode() === 'CREATE'" (ngSubmit)="onCreateGroup()">
+    <div class="form-group">
+      <label for="groupName">SHG Group Name</label>
+      <input 
+        id="groupName" 
+        type="text" 
+        class="form-control" 
+        [(ngModel)]="groupName" 
+        name="groupName" 
+        placeholder="e.g. Mahila Pragati SHG" 
+        required 
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="village">Village / Locality</label>
+      <input 
+        id="village" 
+        type="text" 
+        class="form-control" 
+        [(ngModel)]="village" 
+        name="village" 
+        placeholder="e.g. Rampur" 
+        required 
+      />
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="isLoading()">
+      {{ isLoading() ? 'Creating Group...' : 'Create SHG & Become Admin' }}
+    </button>
+  </form>
+
+  <!-- Form 2: Join Group -->
+  <form *ngIf="selectedMode() === 'JOIN'" (ngSubmit)="onJoinGroup()">
+    <div class="form-group">
+      <label for="groupCode">SHG Group Code</label>
+      <input 
+        id="groupCode" 
+        type="text" 
+        class="form-control code-input" 
+        [(ngModel)]="groupCode" 
+        name="groupCode" 
+        placeholder="e.g. SHG-4821" 
+        required 
+      />
+      <small class="help-text">Ask your group leader for the group code.</small>
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="isLoading()">
+      {{ isLoading() ? 'Sending Request...' : 'Send Join Request' }}
+    </button>
+  </form>
+</div>

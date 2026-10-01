@@ -1,0 +1,106 @@
+<!-- <p>sidebar works!</p> -->
+
+
+<aside class="app-sidebar">
+
+  <ng-container *ngIf="userProfile$ | async as userProfile; else loadingOrError">
+    <div class="user-info">
+      <div class="avatar">SHG </div>
+      <h3>{{ userProfile.userName }}</h3>
+      <p>{{ userProfile.role }} • {{ userProfile.shgName || 'No Group' }}</p>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingOrError>
+    <div class="loading-placeholder">Loading profile...</div>
+  </ng-template> 
+
+   <!-- <div class="sidebar-user-card">
+    <div class="avatar">SHG </div>
+    <div class="user-meta" *ngIf="!isCollapsed">
+      <span class="user-name">Sunita Sharma</span>
+      <span class="user-role">Member • Jay Ambe SHG</span>
+    </div>
+  </div> -->
+
+  <nav class="nav-menu">
+    <a routerLink="/member" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label" *ngIf="!isCollapsed">My Profile & Passbook</span>
+    </a>
+
+    <a routerLink="/meeting" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Metting</span>
+    </a>
+     
+
+    <a routerLink="/loans" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Loans & Repayment</span>
+    </a>
+
+    <a routerLink="/allmember" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label" *ngIf="!isCollapsed">All Member </span>
+    </a>
+
+    <a routerLink="/loans" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Loans & Repayment</span>
+    </a>
+
+    <a routerLink="/loans" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Loans & Repayment</span>
+    </a>
+
+    <a routerLink="/auth/signup" class="nav-item">
+      <span class="nav-icon">➕</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Join Another Group</span>
+    </a>
+
+    
+
+  </nav>
+</aside>
+
+
+
+
+
+<!-- <aside class="app-sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-user-card">
+    <div class="avatar">SS</div>
+    <div class="user-meta" *ngIf="!isCollapsed">
+      <span class="user-name">Sunita Sharma</span>
+      <span class="user-role">Member • Jay Ambe SHG</span>
+    </div>
+  </div>
+
+  <nav class="nav-menu">
+    <a routerLink="/member" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label" *ngIf="!isCollapsed">My Profile & Passbook</span>
+    </a>
+
+    <a routerLink="/loans" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Loans & Repayment</span>
+    </a>
+
+    <a routerLink="/approval" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">✅</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Member Approvals</span>
+    </a>
+
+    <a routerLink="/auth/signup" class="nav-item">
+      <span class="nav-icon">➕</span>
+      <span class="nav-label" *ngIf="!isCollapsed">Join Another Group</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer" *ngIf="!isCollapsed">
+    <small>SHG App v1.0.0</small>
+  </div>
+</aside> -->

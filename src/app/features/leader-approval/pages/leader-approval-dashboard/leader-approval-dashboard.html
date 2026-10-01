@@ -1,0 +1,216 @@
+ <p>leader-approval-dashboard works!</p>
+ <h1>Gauri</h1>
+
+<div class="leader-dashboard">
+  <header class="dashboard-header">
+    <h2>Pending Join Requests</h2>
+    <p>Review and approve new members requesting to join your Self-Help Group.</p>
+  </header>
+
+  <!-- Alert Messages -->
+  <div *ngIf="successMessage()" class="alert alert-success">
+    {{ successMessage() }}
+  </div>
+  <div *ngIf="errorMessage()" class="alert alert-danger">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="loading-state">
+    <p>Loading pending requests...</p>
+  </div>
+
+  <!-- Content State -->
+  <div *ngIf="!isLoading()">
+    <div *ngIf="pendingRequests().length === 0" class="empty-state">
+      <p>🎉 No pending join requests right now.</p>
+    </div>
+
+    <div *ngIf="pendingRequests().length > 0" class="request-cards">
+      <div *ngFor="let request of pendingRequests()" class="card">
+        <div class="user-details">
+          <h3>{{ request.user?.name || 'Applicant' }}</h3>
+          <p><strong>Email:</strong> {{ request.user?.email }}</p>
+          <p><strong>Phone:</strong> {{ request.user?.phone }}</p>
+        </div>
+
+        <div class="card-actions">
+          <button 
+            type="button" 
+            class="btn-approve" 
+            (click)="handleResponse(request.id, 'APPROVE')">
+            Approve
+          </button>
+          <button 
+            type="button" 
+            class="btn-reject" 
+            (click)="handleResponse(request.id, 'REJECT')">
+            Reject
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!--<div class="approval-dashboard">
+  
+  <header class="dashboard-header">
+    <div class="header-titles">
+      <h1>Member Approvals</h1>
+      <p class="subtitle">Jay Ambe SHG • Group Code: <strong>SHG-DELHI-042</strong></p>
+    </div>
+    <div class="stat-badge">
+      <span class="stat-count">{{ pendingMembers.length }}</span>
+      <span class="stat-label">Pending Requests</span>
+    </div>
+  </header>
+
+ 
+  <section class="controls-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input 
+        type="text" 
+        placeholder="Search by member name, phone, or Aadhaar..."
+        [(ngModel)]="searchQuery"
+        (input)="filterRequests()" 
+      />
+    </div>
+
+    <div class="filter-group">
+      <button 
+        [class.active]="selectedTab === 'PENDING'" 
+        (click)="setTab('PENDING')">
+        Pending ({{ pendingMembers.length }})
+      </button>
+      <button 
+        [class.active]="selectedTab === 'HISTORY'" 
+        (click)="setTab('HISTORY')">
+        Actioned History ({{ historyMembers.length }})
+      </button>
+    </div>
+  </section>
+
+  
+  <section *ngIf="selectedTab === 'PENDING'" class="requests-grid">
+    <div *ngIf="filteredMembers.length === 0" class="empty-state">
+      <span class="empty-icon">🎉</span>
+      <h3>No Pending Approvals</h3>
+      <p>All member registration requests for your SHG group have been processed.</p>
+    </div>
+
+    <div *ngFor="let member of filteredMembers" class="approval-card">
+      <div class="card-header">
+        <div class="member-meta">
+          <div class="avatar-circle">{{ getInitials(member.fullName) }}</div>
+          <div>
+            <h3>{{ member.fullName }}</h3>
+            <span class="date-tag">Applied: {{ member.appliedDate }}</span>
+          </div>
+        </div>
+        <span class="status-badge pending">Pending Review</span>
+      </div>
+
+      <div class="card-body">
+        <div class="detail-row">
+          <span class="label">Mobile Number</span>
+          <span class="value">{{ member.phone }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Aadhaar (eKYC)</span>
+          <span class="value">{{ member.aadhaarLastFour }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">House / Location</span>
+          <span class="value">{{ member.villageBlock }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Proposed Monthly Savings</span>
+          <span class="value highlight">₹{{ member.proposedSavings }}/month</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn-reject" (click)="openRejectModal(member)">
+          ✕ Reject
+        </button>
+        <button class="btn-approve" (click)="approveMember(member.id)">
+          ✓ Approve Member
+        </button>
+      </div>
+    </div>
+  </section>
+
+  
+  <section *ngIf="selectedTab === 'HISTORY'" class="history-table-container">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Mobile</th>
+          <th>Date Actioned</th>
+          <th>Decision</th>
+          <th>Notes / Reason</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of historyMembers">
+          <td>
+            <strong>{{ item.fullName }}</strong>
+            <small class="block-text">{{ item.villageBlock }}</small>
+          </td>
+          <td>{{ item.phone }}</td>
+          <td>{{ item.actionDate }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="item.status.toLowerCase()">
+              {{ item.status }}
+            </span>
+          </td>
+          <td class="notes-cell">{{ item.rejectionReason || 'Approved by Leader' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  
+  <div class="modal-backdrop" *ngIf="activeMemberForRejection">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Reject Member Request</h3>
+        <button class="close-btn" (click)="closeRejectModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>You are rejecting <strong>{{ activeMemberForRejection.fullName }}</strong>.</p>
+        <label for="rejectReason">Please select or type a reason for rejection:</label>
+        
+        <select [(ngModel)]="rejectionReason" class="modal-select">
+          <option value="">-- Select Reason --</option>
+          <option value="Aadhaar / Identity details mismatch">Aadhaar / Identity details mismatch</option>
+          <option value="Not residing in SHG target village block">Not residing in SHG target village block</option>
+          <option value="Already a member of another SHG group">Already a member of another SHG group</option>
+          <option value="Custom">Other / Custom Reason</option>
+        </select>
+
+        <textarea 
+          *ngIf="rejectionReason === 'Custom'"
+          [(ngModel)]="customReasonText" 
+          rows="3" 
+          placeholder="Type specific rejection details..."
+          class="modal-textarea">
+        </textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeRejectModal()">Cancel</button>
+        <button class="btn-confirm-reject" (click)="confirmRejection()">
+          Confirm Rejection
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->
