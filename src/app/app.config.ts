@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     // Pass both withFetch() and withInterceptors() into provideHttpClient
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor]) // 👈 Pass JWT Token automatically
     )
   ]
 }

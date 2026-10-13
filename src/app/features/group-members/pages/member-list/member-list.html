@@ -1,0 +1,103 @@
+<p>member-list works!</p>
+
+<div class="members-container">
+  <div class="header">
+    <h2>Group Members List</h2>
+  </div>
+
+  @if (membersResource.isLoading()) {
+    <p class="loading-state">Loading group members...</p>
+  } @else if (membersResource.error()) {
+    <p class="error-msg">Failed to load members. Please make sure you are logged in.</p>
+  } @else {
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Group Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 👈 Direct array loop without .data or ?. -->
+        @for (member of membersResource.value(); track member.id) {
+          <tr>
+            <td>{{ member.id }}</td>
+            <td>{{ member.memberName }}</td>
+            <td>{{ member.email }}</td>
+            <td><span class="badge">{{ member.role }}</span></td>
+            <td>{{ member.groupName || 'N/A' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="empty-state">No members found in your group.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- (Page component displaying the table/list) --><div class="members-container">
+  <!-- <div class="header">
+    <h2>Group Members List</h2> -->
+
+    <!-- <div class="filter-group">
+      <label for="groupSelect">Select Group: </label>
+      <select 
+        id="groupSelect" 
+        [ngModel]="selectedGroupId()" 
+        (ngModelChange)="onGroupChange($event)"
+      >
+        <option value="1">Group Alpha (ID: 1)</option>
+        <option value="2">Group Beta (ID: 2)</option>
+      </select>
+    </div> -->
+  <!-- </div> -->
+
+  <!-- <table class="members-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Group</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (member of filteredMembers(); track member.id) {
+        <tr>
+          <td>{{ member.id }}</td>
+          <td>{{ member.memberName }}</td>
+          <td>{{ member.email }}</td>
+          <td><span class="badge">{{ member.role }}</span></td>
+          <td>{{ member.groupName }}</td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5">No members found in Group {{ selectedGroupId() }}.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>  -->

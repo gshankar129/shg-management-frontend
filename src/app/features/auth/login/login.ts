@@ -62,15 +62,5 @@ export class Login {
           this.errorMessage = err.error?.error || err.error?.message || 'Login failed. Please check credentials.';
         }
       });
-
-  // mobile = '';
-  // password = '';
-  // private router = inject(Router);
-
-  // onLogin() {
-  //   // Simulate setting session token
-  //   localStorage.setItem('token', 'fake-jwt-token');
-  //   // Navigate to member profile after login
-  //   this.router.navigate(['/member']);
-   }
+    }
 }

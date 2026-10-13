@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Member } from '../../shared/models/user.model';
 
 // --- Data Models & Interfaces ---
 
@@ -59,6 +60,15 @@ export interface ServiceApiResponse<T = any> {
 export class ShgService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/groups`;
+
+  //private apiUrl = 'http://localhost:3000/api/members';
+
+  // For backend API integration:
+  getMembersByGroup(groupId: string): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.apiUrl}?groupId=${groupId}`);
+  }
+
+
 
   /**
    * Step 2A: Create a new SHG Group (Promotes user to ADMIN/LEADER)
