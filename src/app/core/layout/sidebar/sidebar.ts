@@ -18,10 +18,10 @@ export class Sidebar {
   private userService = inject(UserService);
   private auth = inject(AuthService);
 
-  // Role comes from login/refresh, so the menu shows at once
+  // Menu items depend on the role, which is already stored from login
   role = this.auth.getRole();
 
-  // Profile request supplies only the name and group
+  // Profile supplies only the name and group
   userProfile$: Observable<UserProfile | null> = this.userService.getUserProfile().pipe(
     map((response) => (response.success ? response.data : null)),
     catchError(() => of(null))

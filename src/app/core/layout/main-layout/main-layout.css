@@ -1,24 +1,40 @@
 .layout-wrapper {
+  --header-height: 64px;          /* match your real header height */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #f8fafc;
 }
 
+/* Header stays on top while the page scrolls */
+app-header {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  height: var(--header-height);
+}
+
 .layout-body {
   display: flex;
-  flex-grow: 1;
+  flex: 1;
+  align-items: flex-start;        /* lets the sidebar keep its own height */
 }
 
 .content-area {
-  flex-grow: 1;
+  flex: 1;
+  min-width: 0;                   /* wide tables scroll inside, not the page */
   padding: 24px;
-  overflow-y: auto;
+}
+
+/* Centered content column */
+.page {
   max-width: 1200px;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
   .content-area {
-    padding: 12px;
+    padding: 12px 12px calc(84px + env(safe-area-inset-bottom)); /* room for the bottom bar */
   }
 }

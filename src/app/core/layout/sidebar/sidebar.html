@@ -1,79 +1,55 @@
 @let profile = userProfile$ | async;
 
-<!-- ========================================== -->
-<!-- 1. DESKTOP SIDEBAR (hidden on mobile)      -->
-<!-- ========================================== -->
-<aside class="app-sidebar">
+<aside class="app-sidebar" [class.collapsed]="isCollapsed">
 
-  @if (profile) {
-    <div class="user-info">
+  <div class="user-info">
+    @if (profile) {
       <div class="avatar">{{ (profile.userName || 'S').charAt(0) }}</div>
-      <h3>{{ profile.userName}}</h3>
+      <h3>{{ profile.userName }}</h3>
       <p>{{ profile.role }} • {{ profile.shgName || 'No Group' }}</p>
-    </div>
-  } @else {
-    <div class="loading-placeholder">Loading profile...</div>
-  }
+    } @else {
+      <div class="avatar skeleton"></div>
+      <div class="skeleton-line"></div>
+    }
+  </div>
 
   <nav class="nav-menu" aria-label="Main menu">
-    <a routerLink="/member" routerLinkActive="active" class="nav-item">
-      <span class="nav-icon">👤</span>
-      @if (!isCollapsed) { <span class="nav-label">My Profile &amp; Passbook</span> }
+    <a class="nav-item" routerLink="/member" routerLinkActive="active"
+       ariaCurrentWhenActive="page" title="My Profile & Passbook">
+      <span class="nav-icon" aria-hidden="true">📒</span>
+      <span class="nav-label">Passbook</span>
     </a>
 
-    <a routerLink="/loans" routerLinkActive="active" class="nav-item">
-      <span class="nav-icon">💳</span>
-      @if (!isCollapsed) { <span class="nav-label">Loans &amp; Repayment</span> }
+    <a class="nav-item" routerLink="/loans" routerLinkActive="active"
+       ariaCurrentWhenActive="page" title="Loans & Repayment">
+      <span class="nav-icon" aria-hidden="true">💳</span>
+      <span class="nav-label">Loans</span>
     </a>
 
-    <a routerLink="/all-members" routerLinkActive="active" class="nav-item">
-      <span class="nav-icon">👥</span>
-      @if (!isCollapsed) { <span class="nav-label">All Members</span> }
+    <a class="nav-item" routerLink="/all-members" routerLinkActive="active"
+       ariaCurrentWhenActive="page" title="All Members">
+      <span class="nav-icon" aria-hidden="true">👥</span>
+      <span class="nav-label">Members</span>
     </a>
 
-    <!-- ADMIN ONLY -->
-    @if (profile?.role === 'ADMIN') {
-      <a routerLink="/savings/record" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">💰</span>
-        @if (!isCollapsed) { <span class="nav-label">Record Savings</span> }
+    <a class="nav-item" routerLink="/meetings" routerLinkActive="active"
+      ariaCurrentWhenActive="page" title="Meetings">
+      <span class="nav-icon" aria-hidden="true">📅</span>
+      <span class="nav-label">Meetings</span>
+    </a>
+
+    @if (role === 'ADMIN') {
+      <a class="nav-item" routerLink="/savings/record" routerLinkActive="active"
+         ariaCurrentWhenActive="page" title="Record Savings">
+        <span class="nav-icon" aria-hidden="true">💰</span>
+        <span class="nav-label">Savings</span>
       </a>
 
-      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">📋</span>
-        @if (!isCollapsed) { <span class="nav-label">Waiting to Join</span> }
+      <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="active"
+         ariaCurrentWhenActive="page" title="Waiting to Join">
+        <span class="nav-icon" aria-hidden="true">📋</span>
+        <span class="nav-label">Requests</span>
       </a>
     }
   </nav>
 </aside>
-
-<!-- ========================================== -->
-<!-- 2. MOBILE BOTTOM NAVIGATION (phones only)  -->
-<!-- ========================================== -->
-<nav class="mobile-bottom-nav" aria-label="Quick menu">
-  <a routerLink="/member" routerLinkActive="active" class="bottom-nav-item">
-    <span class="bottom-icon">👤</span>
-    <span>Profile</span>
-  </a>
-
-  <a routerLink="/loans" routerLinkActive="active" class="bottom-nav-item">
-    <span class="bottom-icon">💳</span>
-    <span>Loans</span>
-  </a>
-
-  <a routerLink="/all-members" routerLinkActive="active" class="bottom-nav-item">
-    <span class="bottom-icon">👥</span>
-    <span>Members</span>
-  </a>
-
-  @if (profile?.role === 'ADMIN') {
-    <a routerLink="/savings/record" routerLinkActive="active" class="bottom-nav-item">
-      <span class="bottom-icon">💰</span>
-      <span>Savings</span>
-    </a>
-
-    <a routerLink="/admin/dashboard" routerLinkActive="active" class="bottom-nav-item">
-      <span class="bottom-icon">📋</span>
-      <span>Approvals</span>
-    </a>
-  }
-</nav>

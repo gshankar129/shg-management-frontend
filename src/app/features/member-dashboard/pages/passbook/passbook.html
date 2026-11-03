@@ -1,0 +1,54 @@
+<div class="passbook-page">
+  <header class="page-header">
+    <h2>My Passbook</h2>
+    <p>Your savings balance and every deposit recorded by your group.</p>
+  </header>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      {{ errorMessage() }}
+      <button type="button" class="retry-btn" (click)="load()">Try again</button>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="state-box">Loading your passbook...</div>
+  } @else if (!errorMessage()) {
+    <div class="summary">
+      <div class="summary-card primary">
+        <span class="summary-label">Current Balance</span>
+        <span class="summary-value">{{ balance() | currency: 'INR' : 'symbol' : '1.2-2' }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Total Deposited</span>
+        <span class="summary-value">{{ totalDeposits() | currency: 'INR' : 'symbol' : '1.2-2' }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Entries</span>
+        <span class="summary-value">{{ transactions().length }}</span>
+      </div>
+    </div>
+
+    <section class="history">
+      <h3>Transaction History</h3>
+
+      @if (transactions().length === 0) {
+        <div class="state-box">No savings recorded yet. Your group admin records them at each meeting.</div>
+      } @else {
+        <ul class="txn-list">
+          @for (t of transactions(); track t.id) {
+            <li class="txn">
+              <div class="txn-info">
+                <span class="txn-type">{{ label(t.type) }}</span>
+                <span class="txn-date">{{ t.txnDate | date: 'dd MMM yyyy, h:mm a' }}</span>
+              </div>
+              <span class="txn-amount" [class.credit]="isCredit(t.type)" [class.debit]="!isCredit(t.type)">
+                {{ isCredit(t.type) ? '+' : '-' }}{{ t.amount | currency: 'INR' : 'symbol' : '1.2-2' }}
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</div>

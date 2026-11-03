@@ -1,17 +1,20 @@
+:host {
+  display: block;
+}
+
 .app-header {
   height: 60px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Left side: menu button + brand */
 .header-left {
   display: flex;
   align-items: center;
@@ -19,32 +22,37 @@
 }
 
 .toggle-btn {
-  background: none;
+  padding: 4px 10px;
   border: none;
-  font-size: 1.4rem;
-  cursor: pointer;
-  color: #334155;
-  padding: 4px 8px;
   border-radius: 6px;
+  background: none;
+  color: #334155;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
-
 .toggle-btn:hover {
   background-color: #f1f5f9;
+}
+.toggle-btn:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 700;
+  color: #1e1b4b;
   font-size: 1.15rem;
-  color: #1e293b;
+  font-weight: 700;
 }
-
 .brand-icon {
   font-size: 1.3rem;
 }
 
+/* Right side: greeting + logout */
 .header-right {
   display: flex;
   align-items: center;
@@ -52,31 +60,45 @@
 }
 
 .user-greeting {
-  font-size: 0.9rem;
   color: #475569;
+  font-size: 0.9rem;
+}
+.user-greeting strong {
+  color: #1e293b;
 }
 
 .btn-logout {
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
   background-color: #fef2f2;
   color: #dc2626;
-  border: 1px solid #fecaca;
-  padding: 6px 12px;
-  border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
-
 .btn-logout:hover {
-  background-color: #fee2e2;
+  background-color: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+.btn-logout:focus-visible {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
 }
 
-@media (max-width: 600px) {
-  .user-greeting, .logout-text {
+/* Phones: the menu is a bottom bar, so hide the collapse button and the text */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 12px;
+  }
+  .toggle-btn,
+  .user-greeting,
+  .logout-text {
     display: none;
   }
 }

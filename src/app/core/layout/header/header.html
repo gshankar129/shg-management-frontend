@@ -1,7 +1,6 @@
-<!-- <p>header works!</p> -->
-<!-- <header class="app-header">
+<header class="app-header">
   <div class="header-left">
-    <button class="toggle-btn" (click)="toggleSidebar.emit()" aria-label="Toggle Menu">
+    <button type="button" class="toggle-btn" (click)="toggleSidebar.emit()" aria-label="Toggle menu">
       ☰
     </button>
     <div class="brand">
@@ -11,9 +10,12 @@
   </div>
 
   <div class="header-right">
-    <span class="user-greeting">Namaste, <strong>Sunita</strong></span>
-    <button class="btn-logout" (click)="onLogout()" title="Logout">
-      🚪 <span class="logout-text">Logout</span>
+    @if (userName()) {
+      <span class="user-greeting">Namaste, <strong>{{ userName() }}</strong></span>
+    }
+    <button type="button" class="btn-logout" (click)="onLogout()" title="Logout">
+      <span aria-hidden="true">🚪</span>
+      <span class="logout-text">Logout</span>
     </button>
   </div>
-</header> -->
+</header>

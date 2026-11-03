@@ -61,6 +61,12 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/savings/savings.routes').then((m) => m.SAVINGS_ROUTES),
       },
+      {
+        path: 'meetings',
+        canActivate: [roleGuard(['ADMIN', 'MEMBER'])],
+        loadChildren: () =>
+          import('./features/meetings/meetings.routes').then((m) => m.MEETING_ROUTES),
+      },
       
     ]
   },
