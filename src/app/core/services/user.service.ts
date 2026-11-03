@@ -5,7 +5,6 @@ import { environment } from '../../../environments/environment';
 
 export interface UserProfile {
   id: number;
-  name: string;
   email: string;
   userName: string;
   role: string;

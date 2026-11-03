@@ -55,6 +55,12 @@ export const routes: Routes = [
           import('./features/group-members/group-member.routes')
             .then(m => m.ALL_MEMBERS_ROUTES)
       },
+      {
+        path: 'savings',
+        canActivate: [roleGuard(['ADMIN', 'MEMBER'])],
+        loadChildren: () =>
+          import('./features/savings/savings.routes').then((m) => m.SAVINGS_ROUTES),
+      },
       
     ]
   },

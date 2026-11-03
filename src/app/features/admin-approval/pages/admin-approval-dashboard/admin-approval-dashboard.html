@@ -1,4 +1,4 @@
-<div class="leader-dashboard">
+<div class="admin-dashboard">
   <header class="dashboard-header">
     <div>
       <h2>Pending Join Requests</h2>
@@ -28,7 +28,7 @@
       @for (request of pendingRequests(); track request.id) {
         <div class="card">
           <div class="user-details">
-            <div class="avatar">{{ request.user?.name?.charAt(0) }}</div>
+            <div class="avatar">{{ request.user?.name?.charAt(0) || '?' }}</div>
             <div>
               <h3>{{ request.user?.name || 'Applicant' }}</h3>
               <p>{{ request.user?.email }}</p>

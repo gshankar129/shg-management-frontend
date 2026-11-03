@@ -1,0 +1,50 @@
+<p>record-savings works!</p>
+<div class="savings-page">
+  <header class="page-header">
+    <h2>Record Savings</h2>
+    <p>Enter the amount a member paid at the meeting.</p>
+  </header>
+
+  @if (message()) {
+    <div class="alert alert-success">{{ message() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  <div class="form-card">
+    @if (isLoadingMembers()) {
+      <p class="state-text">Loading members...</p>
+    } @else {
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm" novalidate>
+        <div class="form-group">
+          <label for="memberId">Member</label>
+          <select id="memberId" name="memberId" class="form-control"
+            [(ngModel)]="memberId" required #memberInput="ngModel">
+            <option [ngValue]="null" disabled>Select a member</option>
+            @for (m of members(); track m.id) {
+              <option [ngValue]="m.id">{{ m.name }}</option>
+            }
+          </select>
+          @if (memberInput.invalid && (memberInput.touched || f.submitted)) {
+            <small class="field-error">Select a member</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="amount">Amount (₹)</label>
+          <input id="amount" name="amount" type="number" class="form-control"
+            placeholder="e.g. 100" min="1" step="0.01"
+            [(ngModel)]="amount" required #amountInput="ngModel" />
+          @if (amountInput.invalid && (amountInput.touched || f.submitted)) {
+            <small class="field-error">Enter an amount greater than 0</small>
+          }
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="f.invalid || isSaving()">
+          {{ isSaving() ? 'Saving...' : 'Record Savings' }}
+        </button>
+      </form>
+    }
+  </div>
+</div>

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LeaderApproval } from './admin-approval';
+import { Savings } from './savings';
 
-describe('LeaderApproval', () => {
-  let service: LeaderApproval;
+describe('Savings', () => {
+  let service: Savings;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(LeaderApproval);
+    service = TestBed.inject(Savings);
   });
 
   it('should be created', () => {
