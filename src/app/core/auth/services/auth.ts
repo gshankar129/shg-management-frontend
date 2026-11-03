@@ -2,40 +2,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { AuthResponse } from '../../services/api';
 import { Router } from '@angular/router';
+import {
+  AuthResponse,
+  AuthRegisterPayload,
+  AuthLoginPayload,
+} from '../models/auth.model';
 
 
-export interface AuthRegisterPayload {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-}
-
-export interface AuthLoginPayload{
-  mobile?: string;
-  email?: string;
-  password : string;
-
-}
-
-// export interface AuthResponse {
-//   success: boolean;
-//   message: string;
-//   token?: string;
-//   data?:{
-//     user?:{
-//       id: string;
-//       name?: string;
-//       email: string;
-//       phone: string;
-//       role?: 'LEADER' | 'ADMIN' | 'MEMBER' | string;
-//     };
-//     token?: string;
-//   };
-//   errors?: Array<{ field: string; message: string }>;
-// }
 
 @Injectable({ providedIn: 'root' })
 
@@ -47,48 +21,18 @@ export class AuthService {
   // Inside AuthService class
   private router = inject(Router);
 
-  redirectByRole(): void {
-    const role = this.getRole()?.toUpperCase();
-
-    switch (role) {
-      case 'SUPERADMIN':
-      case 'SUPER_ADMIN':
-        this.router.navigate(['/superadmin/dashboard']);
-        break;
-      case 'ADMIN':
-        this.router.navigate(['/admin/dashboard']);
-        break;
-      case 'MEMBER':
-      case 'LEADER':
-        this.router.navigate(['/member/profile']);
-        break;
-      case 'GUEST':
-      // Direct newly registered guests to the onboarding setup page
-      this.router.navigate(['/onboarding']);
-      break;  
-      default:
-        this.router.navigate(['/login']);
-        break;
-    }
-  }
-
-
-  // Modern Angular Signals replace BehaviorSubject
+// Modern Angular Signals replace BehaviorSubject
   currentUser = signal<string | null>(localStorage.getItem('userName'));
   
   // 1. Fixed endpoint name: /register (matches Express register controller)
   register(payload: AuthRegisterPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, payload, {
-      withCredentials: true
-    });
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, payload);
   }
 
   // 2. Fixed token and user extraction from response.data
 
   login(credentials: AuthLoginPayload): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials, {
-      withCredentials: true
-    }).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response) => {
 
         const token = response.data?.token;
@@ -102,25 +46,36 @@ export class AuthService {
           localStorage.setItem('userName', displayName);
           this.currentUser.set(displayName);
         }
-
-        // Auto-redirect user based on role
-        this.redirectByRole();
-
-        // if (response.token) localStorage.setItem('token', response.token);
-        // if (response.role) localStorage.setItem('role', response.role);
-        // if (response.name) {
-        //   localStorage.setItem('userName', response.name);
-        //   this.currentUser.set(response.name);
-        // }
       })
     );
   }
 
-  logout(): void {
+  refreshUser(): Observable<AuthResponse> {
+  return this.http.get<AuthResponse>(`${this.apiUrl}/me`).pipe(
+    tap((response) => {
+      const user = response.data?.user;
+
+      if (user?.role) localStorage.setItem('role', user.role);
+
+      if (user?.name) {
+        localStorage.setItem('userName', user.name);
+        this.currentUser.set(user.name);
+      }
+    })
+  );
+}
+
+  /** Clears storage only. Used by logout() and by the guards. */
+  clearSession(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('userName');
     this.currentUser.set(null);
+  }
+
+  logout(): void {
+  this.clearSession();
+  this.router.navigate(['/auth/login']);
   }
 
   getToken(): string | null {
@@ -132,6 +87,37 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return !!this.getToken() && !this.isTokenExpired() ;
+  }
+
+  /** One place that says where each role lands. Must match app.routes.ts */
+  getHomeRoute(role?: string | null): string {
+    switch (role?.toUpperCase()) {
+      case 'GUEST':
+        return '/onboarding';
+      case 'MEMBER':
+        return '/member';
+      case 'ADMIN':
+        return '/admin';
+      default:
+        return '/auth/login';
+    }
+  }
+
+  redirectByRole(): void {
+    this.router.navigate([this.getHomeRoute(this.getRole())]);
+  }
+
+  private isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+    try {
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64));
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+
   }
 }

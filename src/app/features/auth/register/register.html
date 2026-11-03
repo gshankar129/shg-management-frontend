@@ -1,101 +1,63 @@
-<p>signup works!</p>
 <div class="signup-container">
   <div class="signup-header">
     <h2>Create Your Account</h2>
-    <p>Register basic details first. You can create or join an SHG group in the next step.</p>
-    <!-- <h2>Join your Self-Help Group</h2>
-    <p>Enter your details and Group Code to submit a join request to your SHG Leader.</p> -->
+    <p>Register your basic details first. You can create or join an SHG group in the next step.</p>
   </div>
 
-  <!-- Success & Error Alert Banners -->
-  <div *ngIf="message()" class="alert alert-success">
-    {{ message() }}
-  </div>
-  
-  <div *ngIf="error()" class="alert alert-danger">
-    {{ error() }}
-  </div>
+  @if (message()) {
+    <div class="alert alert-success">{{ message() }}</div>
+  }
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
 
-
-  <form (ngSubmit)="onRegister()">
-    <!-- Full Name -->
+  <form (ngSubmit)="onRegister()" #f="ngForm" novalidate>
     <div class="form-group">
-      <label for="fullName">Full Name</label>
-      <input 
-        id="name"
-        type="text" 
-        class="form-control"
-        [(ngModel)]="name" 
-        name="name" 
-        placeholder="e.g. Sunita Sharma"
-        required 
-      />
+      <label for="name">Full Name</label>
+      <input id="name" name="name" type="text" class="form-control"
+        autocomplete="name" placeholder="e.g. Sunita Sharma"
+        [(ngModel)]="name" required minlength="2" #nameInput="ngModel" />
+      @if (nameInput.invalid && (nameInput.touched || f.submitted)) {
+        <small class="field-error">Enter your full name</small>
+      }
     </div>
 
-    <!-- Email Address -->
     <div class="form-group">
       <label for="email">Email Address</label>
-      <input 
-        id="email"
-        type="email" 
-        class="form-control"
-        [(ngModel)]="email" 
-        name="email" 
-        placeholder="name@example.com"
-        required 
-      />
+      <input id="email" name="email" type="email" class="form-control"
+        autocomplete="email" placeholder="name@example.com"
+        [(ngModel)]="email" required email #emailInput="ngModel" />
+      @if (emailInput.invalid && (emailInput.touched || f.submitted)) {
+        <small class="field-error">Enter a valid email address</small>
+      }
     </div>
 
-    <!-- Mobile Number -->
     <div class="form-group">
       <label for="phone">Mobile Number</label>
-      <input 
-        id="phone"
-        type="tel" 
-        class="form-control"
-        [(ngModel)]="phone" 
-        name="phone" 
-        placeholder="10-digit mobile number"
-        required 
-      />
+      <input id="phone" name="phone" type="tel" class="form-control"
+        autocomplete="tel" placeholder="10-digit mobile number"
+        [(ngModel)]="phone" required pattern="[0-9]{10}" #phoneInput="ngModel" />
+      @if (phoneInput.invalid && (phoneInput.touched || f.submitted)) {
+        <small class="field-error">Enter a 10-digit mobile number</small>
+      }
     </div>
 
-    <!-- Group Code 
     <div class="form-group">
-      <label for="groupCode">SHG Group Code</label>
-      <input 
-        id="groupCode"
-        type="text" 
-        class="form-control code-input"
-        [(ngModel)]="groupCode" 
-        name="groupCode" 
-        placeholder="e.g. SHG-DELHI-042"
-        required 
-      />
-      <small class="help-text">Ask your group leader or animator for your 10-character code.</small>
-    </div>-->
-
-    <!-- Password / PIN -->
-    <div class="form-group">
-      <label for="password">Create Security PIN / Password</label>
-      <input 
-        id="password"
-        type="password" 
-        class="form-control"
-        [(ngModel)]="password" 
-        name="password" 
-        placeholder="At least 4 characters"
-        required 
-      />
+      <label for="password">Create Password</label>
+      <input id="password" name="password" type="password" class="form-control"
+        autocomplete="new-password" placeholder="At least 6 characters"
+        [(ngModel)]="password" required minlength="6" #passwordInput="ngModel" />
+      @if (passwordInput.invalid && (passwordInput.touched || f.submitted)) {
+        <small class="field-error">Password must be at least 6 characters</small>
+      }
     </div>
 
-    <button type="submit" class="btn-primary">
+    <button type="submit" class="btn-primary" [disabled]="f.invalid || isLoading()">
       {{ isLoading() ? 'Registering...' : 'Create Account' }}
-     <!-- Submit Request to Join -->
     </button>
   </form>
 
   <div class="signup-footer">
-    <p>Already a registered user? <a routerLink="/auth/login">Log In here</a></p>
+    <p>Already registered? <a routerLink="/auth/login">Log in here</a></p>
   </div>
 </div>

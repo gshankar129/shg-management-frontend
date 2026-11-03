@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { AdminApproval } from './admin-approval';
 
-import { Api } from './api';
-
-describe('Api', () => {
-  let service: Api;
+describe('AdminApproval', () => {
+  let service: AdminApproval;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Api);
+    service = TestBed.inject(AdminApproval);
   });
 
   it('should be created', () => {

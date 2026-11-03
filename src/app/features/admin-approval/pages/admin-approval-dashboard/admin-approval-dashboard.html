@@ -1,0 +1,55 @@
+<div class="leader-dashboard">
+  <header class="dashboard-header">
+    <div>
+      <h2>Pending Join Requests</h2>
+      <p>Review and approve people who want to join your Self-Help Group.</p>
+    </div>
+    <div class="count-badge">
+      <span class="count">{{ pendingRequests().length }}</span>
+      <span class="label">Pending</span>
+    </div>
+  </header>
+
+  @if (successMessage()) {
+    <div class="alert alert-success">{{ successMessage() }}</div>
+  }
+  @if (errorMessage()) {
+    <div class="alert alert-danger">{{ errorMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-state">Loading pending requests...</div>
+  } @else if (pendingRequests().length === 0) {
+    <div class="empty-state">
+      <p>No pending join requests right now.</p>
+    </div>
+  } @else {
+    <div class="request-cards">
+      @for (request of pendingRequests(); track request.id) {
+        <div class="card">
+          <div class="user-details">
+            <div class="avatar">{{ request.user?.name?.charAt(0) }}</div>
+            <div>
+              <h3>{{ request.user?.name || 'Applicant' }}</h3>
+              <p>{{ request.user?.email }}</p>
+              <p>{{ request.user?.phone || 'No phone' }}</p>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button type="button" class="btn-reject"
+              [disabled]="processingId() !== null"
+              (click)="handleResponse(request.id, 'REJECT')">
+              Reject
+            </button>
+            <button type="button" class="btn-approve"
+              [disabled]="processingId() !== null"
+              (click)="handleResponse(request.id, 'APPROVE')">
+              {{ processingId() === request.id ? 'Please wait...' : 'Approve' }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

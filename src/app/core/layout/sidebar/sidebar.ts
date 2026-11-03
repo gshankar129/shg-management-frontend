@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { UserProfile, UserService } from '../../services/api';
+import { UserProfile, UserService } from '../../services/user.service';
 import { catchError, map, Observable, of } from 'rxjs';
 
 @Component({

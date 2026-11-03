@@ -1,12 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../core/services/api';
+import { Component, inject } from '@angular/core';import { AuthService } from '../../../core/auth/services/auth';
 
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
@@ -14,10 +12,12 @@ export class Navbar {
   private authService = inject(AuthService);
 
   // Access signals directly from AuthService
-  // currentUser = this.authService.currentUser;
+
+  userName = this.authService.currentUser;
+
   // userRole = this.authService.userRole;
 
-  // onLogout(): void {
-  //   this.authService.logout();
-  // }
+  onLogout(): void {
+    this.authService.logout();
+  }
 }

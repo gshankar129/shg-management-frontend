@@ -1,18 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Member } from '../../shared/models/user.model';
-
-// --- Data Models & Interfaces ---
 
 export interface CreateGroupPayload {
   name: string;
   village: string;
-}
-
-export interface JoinGroupPayload {
-  groupCode: string;
 }
 
 export interface SHGGroup {
@@ -20,9 +13,8 @@ export interface SHGGroup {
   name: string;
   village: string;
   groupCode: string;
-  leaderId: number;
+  createdById: number;
   createdAt?: string;
-  updatedAt?: string;
 }
 
 export interface JoinRequest {
@@ -34,7 +26,7 @@ export interface JoinRequest {
     id: number;
     name: string;
     email: string;
-    phone: string;
+    phone: string | null;
   };
   createdAt?: string;
 }
@@ -43,107 +35,60 @@ export interface GroupMember {
   id: number;
   name: string;
   email: string;
-  phone: string;
+  phone: string | null;
   role: string;
-  joinedAt?: string;
 }
 
-export interface ServiceApiResponse<T = any> {
+export interface GroupMembersData {
+  groupId: number;
+  groupName: string;
+  village: string;
+  groupCode: string;
+  totalMembers: number;
+  members: GroupMember[];
+}
+
+export interface ServiceApiResponse<T = unknown> {
   success: boolean;
-  message: string;
+  message?: string;
   data: T;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ShgService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/groups`;
 
-  //private apiUrl = 'http://localhost:3000/api/members';
-
-  // For backend API integration:
-  getMembersByGroup(groupId: string): Observable<Member[]> {
-    return this.http.get<Member[]>(`${this.apiUrl}?groupId=${groupId}`);
-  }
-
-
-
-  /**
-   * Step 2A: Create a new SHG Group (Promotes user to ADMIN/LEADER)
-   */
+  // Guest: create a group and become ADMIN
   createGroup(payload: CreateGroupPayload): Observable<ServiceApiResponse<SHGGroup>> {
-    return this.http.post<ServiceApiResponse<SHGGroup>>(`${this.apiUrl}/create`, payload).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post<ServiceApiResponse<SHGGroup>>(`${this.apiUrl}/create`, payload);
   }
 
-  /**
-   * Step 2B: Send a request to join an existing SHG Group using a group code
-   */
+  // Guest: send a join request with a group code
   joinGroup(groupCode: string): Observable<ServiceApiResponse<JoinRequest>> {
-    const payload: JoinGroupPayload = { groupCode: groupCode.toUpperCase() };
-    return this.http.post<ServiceApiResponse<JoinRequest>>(`${this.apiUrl}/join`, payload).pipe(
-      catchError(this.handleError)
+    return this.http.post<ServiceApiResponse<JoinRequest>>(`${this.apiUrl}/join`, {
+      groupCode: groupCode.trim().toUpperCase(),
+    });
+  }
+
+  // Admin: pending requests of their own group
+  getPendingRequests(): Observable<ServiceApiResponse<JoinRequest[]>> {
+    return this.http.get<ServiceApiResponse<JoinRequest[]>>(`${this.apiUrl}/requests/pending`);
+  }
+
+  // Admin: approve or reject a request
+  respondToRequest(
+    requestId: number,
+    action: 'APPROVE' | 'REJECT'
+  ): Observable<ServiceApiResponse<null>> {
+    return this.http.patch<ServiceApiResponse<null>>(
+      `${this.apiUrl}/requests/${requestId}/respond`,
+      { action }
     );
   }
 
-  /**
-   * Retrieve group details by Group ID
-   */
-  getGroupDetails(groupId: number): Observable<ServiceApiResponse<SHGGroup>> {
-    return this.http.get<ServiceApiResponse<SHGGroup>>(`${this.apiUrl}/${groupId}`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Admin/Leader: Fetch all pending join requests for their SHG group
-   */
-  getPendingRequests(groupId: number): Observable<ServiceApiResponse<JoinRequest[]>> {
-    return this.http.get<ServiceApiResponse<JoinRequest[]>>(`${this.apiUrl}/${groupId}/requests/pending`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Admin/Leader: Approve or Reject a member's join request
-   */
-  respondToRequest(requestId: number, action: 'APPROVE' | 'REJECT'): Observable<ServiceApiResponse> {
-    return this.http.patch<ServiceApiResponse>(`${this.apiUrl}/requests/${requestId}/respond`, { action }).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Fetch all members belonging to a specific SHG group
-   */
-  getGroupMembers(groupId: number): Observable<ServiceApiResponse<GroupMember[]>> {
-    return this.http.get<ServiceApiResponse<GroupMember[]>>(`${this.apiUrl}/${groupId}/members`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Member: Check status of current pending join request
-   */
-  getMyRequestStatus(): Observable<ServiceApiResponse<JoinRequest>> {
-    return this.http.get<ServiceApiResponse<JoinRequest>>(`${this.apiUrl}/requests/my-status`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  /**
-   * Centralized Http Error Handler
-   */
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unexpected network error occurred. Please try again.';
-    if (error.error && error.error.message) {
-      errorMessage = error.error.message;
-    } else if (error.status === 0) {
-      errorMessage = 'Could not connect to the backend server.';
-    }
-    return throwError(() => new Error(errorMessage));
+  // Admin or Member: members of their own group (backend reads the group from the token)
+  getGroupMembers(): Observable<ServiceApiResponse<GroupMembersData>> {
+    return this.http.get<ServiceApiResponse<GroupMembersData>>(`${this.apiUrl}/members`);
   }
 }

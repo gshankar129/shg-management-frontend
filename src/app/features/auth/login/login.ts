@@ -1,66 +1,39 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../core/auth/services/auth';
+import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthResponse } from '../../../core/services/api';
-
-// export interface LoginResponse {
-//   role?: 'LEADER' | 'ADMIN' | 'MEMBER' | string;
-//   token?: string;
-//   message?: string;
-// }
+import { AuthService } from '../../../core/auth/services/auth';
 
 @Component({
   selector: 'app-login',
-  standalone : true,
-  imports: [
-    CommonModule, 
-    FormsModule
-  ],
+  standalone: true,
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   private authService = inject(AuthService);
 
-  private router = inject(Router);
+  credentials = { email: '', password: '' };
+  isLoading = false;
+  errorMessage = '';
 
-    credentials = {
-      email: '',
-      password: ''
-    };
+  onSubmit(): void {
+    if (!this.credentials.email || !this.credentials.password) return;
 
-    isLoading = false;
-    errorMessage = '';
+    this.isLoading = true;
+    this.errorMessage = '';
 
-    onSubmit(): void {
-      if (!this.credentials.email || !this.credentials.password) return;
-
-      this.isLoading = true;
-      this.errorMessage = '';
-
-      this.authService.login(this.credentials).subscribe({
-        next: (res:AuthResponse) => {
-          this.isLoading = false;
-
-          // Safely extract role from nested payload
-          const role = res.data?.user?.role;
-          
-          // Redirect based on backend role payload
-          if (role === 'LEADER' || role === 'ADMIN') {
-            this.router.navigate(['/leader/dashboard']);
-          } else if (role === 'MEMBER'){
-            this.router.navigate(['/member/dashboard']);
-          }else if (role === 'GUEST') {
-            this.router.navigate(['/onboarding']);
-          }
-        },
-        error: (err: HttpErrorResponse) => {
-          this.isLoading = false;
-          this.errorMessage = err.error?.error || err.error?.message || 'Login failed. Please check credentials.';
-        }
-      });
-    }
+    this.authService.login(this.credentials).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.authService.redirectByRole();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading = false;
+        this.errorMessage =
+          err.error?.message || err.error?.error || 'Login failed. Please check credentials.';
+      },
+    });
+  }
 }

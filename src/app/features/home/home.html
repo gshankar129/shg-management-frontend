@@ -1,0 +1,41 @@
+<!-- <p>home works!</p> -->
+<header class="nav">
+  <span class="logo">SHG Portal</span>
+  <nav>
+    @if (isLoggedIn) {
+      <a class="btn primary" [routerLink]="dashboardLink">Go to Dashboard</a>
+    } @else {
+      <a class="btn" routerLink="/auth/login">Login</a>
+      <a class="btn primary" routerLink="/auth/register">Register</a>
+    }
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Manage your Self Help Group, digitally</h1>
+  <p>Track savings, loans, repayments and meetings in one place. No more paper notebooks or calculation mistakes.</p>
+  @if (!isLoggedIn) {
+    <a class="btn primary big" routerLink="/auth/register">Get Started</a>
+  }
+</section>
+
+<section class="features">
+  <div class="card">
+    <h3>Savings</h3>
+    <p>Record monthly savings and see every member's passbook.</p>
+  </div>
+  <div class="card">
+    <h3>Loans</h3>
+    <p>Request loans, approve them, and track repayments with interest.</p>
+  </div>
+  <div class="card">
+    <h3>Meetings</h3>
+    <p>Keep meeting records and attendance for your group.</p>
+  </div>
+  <div class="card">
+    <h3>Members</h3>
+    <p>Join a group with a code, and let the group admin approve you.</p>
+  </div>
+</section>
+
+<footer class="footer">© 2026 SHG Portal</footer>

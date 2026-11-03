@@ -9,18 +9,26 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
 
     const token = authService.getToken();
     const userRole = authService.getRole()?.toUpperCase();
+    
+    //Not logged in , or token without a role
+    if (!token || !userRole) {
+      authService.logout();      // clear bad data
+      return router.createUrlTree(['/auth/login']);
+      
 
-    if (!token) {
-      router.navigate(['/auth/login']);
-      return false;
+      //router.navigate(['/auth/login']);
+      // return false;
     }
-
-    if (userRole && allowedRoles.includes(userRole)) {
+    // Allowed
+    if (allowedRoles.includes(userRole)) {
       return true;
     }
 
+    //wrong role: send to this role's own home page
+    return router.createUrlTree([authService.getHomeRoute(userRole)]);
+    
     // Redirect to default route if role is unauthorized
-    authService.redirectByRole();
-    return false;
+    // authService.redirectByRole();
+    // return false;
   };
 };
