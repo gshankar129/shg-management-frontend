@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://shg-management-backend.vercel.app/api'
+  apiurl: 'shg-management-backend-o8ev.onrender.com/api'
+  //Url: 'https://shg-management-backend.vercel.app/api'
 };
